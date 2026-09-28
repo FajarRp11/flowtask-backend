@@ -31,4 +31,12 @@ class Task extends Model
             'task_assignees'
         )->withTimestamps();
     }
+
+    public function labels()
+    {
+        return $this->belongsToMany(
+            Label::class,
+            'task_labels'
+        )->withTimestamps();
+    }
 }

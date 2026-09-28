@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\LabelController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\ProjectMemberController;
 use App\Http\Controllers\Api\TaskAssigneeController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\TaskLabelController;
 use App\Http\Controllers\Api\WorkspaceController;
 use App\Http\Controllers\Api\WorkspaceMemberController;
 use Illuminate\Http\Request;
@@ -101,5 +103,45 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete(
         'tasks/{task}/assignees/{user}',
         [TaskAssigneeController::class, 'destroy']
+    );
+
+    Route::get(
+        'workspaces/{workspace}/labels',
+        [LabelController::class, 'index']
+    );
+
+    Route::post(
+        'workspaces/{workspace}/labels',
+        [LabelController::class, 'store']
+    );
+
+    Route::get(
+        'labels/{label}',
+        [LabelController::class, 'show']
+    );
+
+    Route::patch(
+        'labels/{label}',
+        [LabelController::class, 'update']
+    );
+
+    Route::delete(
+        'labels/{label}',
+        [LabelController::class, 'destroy']
+    );
+
+    Route::get(
+        'tasks/{task}/labels',
+        [TaskLabelController::class, 'index']
+    );
+
+    Route::post(
+        'tasks/{task}/labels',
+        [TaskLabelController::class, 'store']
+    );
+
+    Route::delete(
+        'tasks/{task}/labels/{label}',
+        [TaskLabelController::class, 'destroy']
     );
 });

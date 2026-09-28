@@ -125,4 +125,30 @@ class TaskPolicy
             ])
             ->exists();
     }
+
+    public function manageLabels(User $user, Task $task): bool
+    {
+        $project = $task->project;
+
+        $isProjectManager = $project->members()
+            ->where('users.id', $user->id)
+            ->wherePivot(
+                'role',
+                ProjectRole::Manager->value
+            )
+            ->exists();
+
+        if ($isProjectManager) {
+            return true;
+        }
+
+        return $project->workspace
+            ->members()
+            ->where('users.id', $user->id)
+            ->wherePivotIn('role', [
+                WorkspaceRole::Owner->value,
+                WorkspaceRole::Admin->value,
+            ])
+            ->exists();
+    }
 }
