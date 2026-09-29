@@ -38,10 +38,7 @@ class ProjectPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Project $project): bool
+    public function manage(User $user, Project $project): bool
     {
         $isProjectManager = $project->members()
             ->where('users.id', $user->id)
@@ -63,11 +60,19 @@ class ProjectPolicy
     }
 
     /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Project $project): bool
+    {
+        return $this->manage($user, $project);
+    }
+
+    /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Project $project): bool
     {
-        return $this->update($user, $project);
+        return $this->manage($user, $project);
     }
 
     /**
@@ -88,30 +93,11 @@ class ProjectPolicy
 
     public function manageMembers(User $user, Project $project): bool
     {
-        return $this->update($user, $project);
+        return $this->manage($user, $project);
     }
 
     public function createTask(User $user, Project $project): bool
     {
-        $isProjectManager = $project->members()
-            ->where('users.id', $user->id)
-            ->wherePivot(
-                'role',
-                ProjectRole::Manager->value
-            )
-            ->exists();
-
-        if ($isProjectManager) {
-            return true;
-        }
-
-        return $project->workspace
-            ->members()
-            ->where('users.id', $user->id)
-            ->wherePivotIn('role', [
-                WorkspaceRole::Owner->value,
-                WorkspaceRole::Admin->value,
-            ])
-            ->exists();
+        return $this->manage($user, $project);
     }
 }

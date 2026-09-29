@@ -16,7 +16,7 @@ class TaskAssigneeController extends Controller
      */
     public function index(Task $task)
     {
-        Gate::authorize('view', Task::class);
+        Gate::authorize('view', $task);
 
         $task->load('assignees');
 

@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Enums\ProjectRole;
-use App\Enums\WorkspaceRole;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Gate;
 
 class TaskPolicy
 {
@@ -43,7 +42,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $this->canManageProject($user, $task);
+        return Gate::forUser($user)->allows('manage', $task->project);
     }
 
     /**
@@ -51,7 +50,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $this->canManageProject($user, $task);
+        return Gate::forUser($user)->allows('manage', $task->project);
     }
 
     /**
@@ -69,86 +68,13 @@ class TaskPolicy
     {
         return false;
     }
-
-    private function canManageProject(
-        User $user,
-        Task $task
-    ): bool {
-        $project = $task->project;
-
-        $isProjectManager = $project
-            ->members()
-            ->where('users.id', $user->id)
-            ->wherePivot(
-                'role',
-                ProjectRole::Manager->value
-            )
-            ->exists();
-
-        if ($isProjectManager) {
-            return true;
-        }
-
-        return $project
-            ->workspace
-            ->members()
-            ->where('users.id', $user->id)
-            ->wherePivotIn('role', [
-                WorkspaceRole::Owner->value,
-                WorkspaceRole::Admin->value,
-            ])
-            ->exists();
-    }
-
     public function manageAssignees(User $user, Task $task): bool
     {
-        $project = $task->project;
-
-        $isProjectManager = $project->members()
-            ->where('users.id', $user->id)
-            ->wherePivot(
-                'role',
-                ProjectRole::Manager->value
-            )
-            ->exists();
-
-        if ($isProjectManager) {
-            return true;
-        }
-
-        return $project->workspace
-            ->members()
-            ->where('users.id', $user->id)
-            ->wherePivotIn('role', [
-                WorkspaceRole::Owner->value,
-                WorkspaceRole::Admin->value,
-            ])
-            ->exists();
+        return Gate::forUser($user)->allows('manage', $task->project);
     }
 
     public function manageLabels(User $user, Task $task): bool
     {
-        $project = $task->project;
-
-        $isProjectManager = $project->members()
-            ->where('users.id', $user->id)
-            ->wherePivot(
-                'role',
-                ProjectRole::Manager->value
-            )
-            ->exists();
-
-        if ($isProjectManager) {
-            return true;
-        }
-
-        return $project->workspace
-            ->members()
-            ->where('users.id', $user->id)
-            ->wherePivotIn('role', [
-                WorkspaceRole::Owner->value,
-                WorkspaceRole::Admin->value,
-            ])
-            ->exists();
+        return Gate::forUser($user)->allows('manage', $task->project);
     }
 }

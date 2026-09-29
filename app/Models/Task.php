@@ -39,4 +39,9 @@ class Task extends Model
             'task_labels'
         )->withTimestamps();
     }
+
+    public function checklistItems()
+    {
+        return $this->hasMany(ChecklistItem::class)->orderBy('sort_order');
+    }
 }

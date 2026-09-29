@@ -32,6 +32,10 @@ class TaskResource extends JsonResource
             'assignees' => UserResource::collection(
                 $this->whenLoaded('assignees')
             ),
+
+            'checklist_items' => ChecklistItemResource::collection(
+                $this->whenLoaded('checklistItems')
+            ),
         ];
     }
 }
