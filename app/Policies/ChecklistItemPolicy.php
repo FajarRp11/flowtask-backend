@@ -71,5 +71,12 @@ class ChecklistItemPolicy
     {
         return false;
     }
-}
 
+    public function reorder(User $user, Task $task): bool
+    {
+        return Gate::forUser($user)->allows(
+            'manage',
+            $task->project
+        );
+    }
+}

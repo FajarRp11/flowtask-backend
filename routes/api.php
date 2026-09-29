@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChecklistItemController;
 use App\Http\Controllers\Api\LabelController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\ProjectMemberController;
@@ -143,5 +144,35 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete(
         'tasks/{task}/labels/{label}',
         [TaskLabelController::class, 'destroy']
+    );
+
+    Route::patch(
+        'tasks/{task}/checklist/reorder',
+        [ChecklistItemController::class, 'reorder']
+    );
+
+    Route::get(
+        'tasks/{task}/checklist',
+        [ChecklistItemController::class, 'index']
+    );
+
+    Route::post(
+        'tasks/{task}/checklist',
+        [ChecklistItemController::class, 'store']
+    );
+
+    Route::get(
+        'checklist-items/{checklistItem}',
+        [ChecklistItemController::class, 'show']
+    );
+
+    Route::patch(
+        'checklist-items/{checklistItem}',
+        [ChecklistItemController::class, 'update']
+    );
+
+    Route::delete(
+        'checklist-items/{checklistItem}',
+        [ChecklistItemController::class, 'destroy']
     );
 });
