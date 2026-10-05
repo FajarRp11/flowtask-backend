@@ -4,12 +4,15 @@ namespace App\Models;
 
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
+use App\Traits\HasPublicId;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable('public_id', 'project_id', 'title', 'description', 'status', 'priority', 'due_date')]
 class Task extends Model
 {
+    use HasPublicId;
+
     protected function casts(): array
     {
         return [
