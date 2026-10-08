@@ -32,7 +32,7 @@ class ChecklistItemController extends Controller
      */
     public function store(Request $request, Task $task)
     {
-        Gate::authorize('create', $task);
+        Gate::authorize('create', [ChecklistItem::class, $task]);
 
         $validated = $request->validate([
             'title' => [
@@ -110,7 +110,7 @@ class ChecklistItemController extends Controller
         Request $request,
         Task $task
     ) {
-        Gate::authorize('reorder', $task);
+        Gate::authorize('reorder', [ChecklistItem::class, $task]);
 
         $validated = $request->validate([
             'items' => [
