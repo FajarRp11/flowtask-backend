@@ -16,7 +16,7 @@ class LabelController extends Controller
      */
     public function index(Workspace $workspace)
     {
-        Gate::authorize('viewAny', $workspace);
+        Gate::authorize('viewAny', [Label::class, $workspace]);
 
         $labels = $workspace->labels()
             ->latest()
@@ -30,7 +30,7 @@ class LabelController extends Controller
      */
     public function store(Request $request, Workspace $workspace)
     {
-        Gate::authorize('create', $workspace);
+        Gate::authorize('create', [Label::class, $workspace]);
 
         $validated = $request->validate([
             'name' => [
